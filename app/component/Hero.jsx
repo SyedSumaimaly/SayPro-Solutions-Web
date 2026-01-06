@@ -16,6 +16,15 @@ export default function Hero() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Prevent background scrolling when mobile menu is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+  }, [isOpen]);
+
   const navLinks = [
     { name: 'Home', id: 'home' },
     { name: 'Service', id: 'services' },
@@ -23,7 +32,6 @@ export default function Hero() {
     { name: 'Contact', id: 'contact' },
   ];
 
-  // Smooth scroll handler
   const scrollToSection = (id) => {
     setIsOpen(false);
     const element = document.getElementById(id);
@@ -47,10 +55,11 @@ export default function Hero() {
       </div>
 
       {/* Sticky Navigation Bar */}
-      <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 px-6 py-4 md:px-12 lg:px-20 ${
-        scrolled ? 'bg-black/80 backdrop-blur-md border-b border-white/10 py-3' : 'bg-transparent py-6'
+      {/* UPDATE: Higher z-index and solid bg-black when scrolled to block overlapping elements */}
+      <nav className={`fixed top-0 left-0 w-full z-[100] transition-all duration-300 px-6 md:px-12 lg:px-20 ${
+        scrolled ? 'bg-black border-b border-white/10 py-3' : 'bg-transparent py-6'
       }`}>
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
+        <div className="max-w-7xl mx-auto flex items-center justify-between relative z-[110]">
           <button onClick={() => scrollToSection('home')} className="text-xl font-bold tracking-tight md:text-2xl">
             SayPro Solutions
           </button>
@@ -69,22 +78,31 @@ export default function Hero() {
           </div>
 
           {/* Mobile Menu Button */}
-          <button onClick={() => setIsOpen(!isOpen)} className="z-50 block lg:hidden focus:outline-none">
+          <button 
+            onClick={() => setIsOpen(!isOpen)} 
+            className="group block lg:hidden focus:outline-none p-2 relative z-[120]"
+            aria-label="Toggle Menu"
+          >
             <div className="space-y-1.5">
-              <span className={`block h-0.5 w-6 bg-white transition-all ${isOpen ? 'rotate-45 translate-y-2' : ''}`}></span>
-              <span className={`block h-0.5 w-6 bg-white transition-all ${isOpen ? 'opacity-0' : ''}`}></span>
-              <span className={`block h-0.5 w-6 bg-white transition-all ${isOpen ? '-rotate-45 -translate-y-2' : ''}`}></span>
+              <span className={`block h-0.5 w-6 bg-white transition-all duration-300 ${isOpen ? 'rotate-45 translate-y-2' : ''}`}></span>
+              <span className={`block h-0.5 w-6 bg-white transition-all duration-300 ${isOpen ? 'opacity-0' : ''}`}></span>
+              <span className={`block h-0.5 w-6 bg-white transition-all duration-300 ${isOpen ? '-rotate-45 -translate-y-2' : ''}`}></span>
             </div>
           </button>
         </div>
 
         {/* Mobile Menu Overlay */}
-        <div className={`fixed inset-0 z-40 flex flex-col items-center justify-center bg-black transition-transform duration-500 lg:hidden ${
-          isOpen ? 'translate-y-0' : '-translate-y-full'
+        {/* UPDATE: Set z-index to 90 and bg-black (Solid) to hide background services text on scroll */}
+        <div className={`fixed inset-0 z-[90] flex flex-col items-center justify-center bg-black transition-all duration-500 lg:hidden ${
+          isOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-full pointer-events-none'
         }`}>
-          <div className="flex flex-col space-y-8 text-center text-2xl font-semibold">
+          <div className="flex flex-col space-y-10 text-center text-3xl font-bold">
             {navLinks.map((link) => (
-              <button key={link.id} onClick={() => scrollToSection(link.id)} className="hover:text-blue-400">
+              <button 
+                key={link.id} 
+                onClick={() => scrollToSection(link.id)} 
+                className="hover:text-blue-400 transition-transform active:scale-95"
+              >
                 {link.name}
               </button>
             ))}
@@ -93,8 +111,8 @@ export default function Hero() {
       </nav>
 
       {/* Hero Content Area */}
-      <div className="relative z-10 flex min-h-screen flex-col items-center justify-center px-6 text-center pt-20">
-        <h1 className="max-w-5xl text-4xl font-extrabold leading-[1.1] tracking-tight sm:text-5xl md:text-7xl">
+      <div className="relative z-10 flex min-h-screen flex-col items-center justify-center px-6 text-center pt-32 pb-12">
+        <h1 className="max-w-5xl text-4xl font-extrabold leading-[1.2] tracking-tight sm:text-5xl md:text-7xl">
           Innovative Technology <br className="hidden sm:block" /> 
           Solutions for Your Business
         </h1>
