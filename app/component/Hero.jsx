@@ -7,7 +7,6 @@ export default function Hero() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
-  // Change navbar background on scroll
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
@@ -16,7 +15,6 @@ export default function Hero() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Prevent background scrolling when mobile menu is open
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
@@ -55,7 +53,6 @@ export default function Hero() {
       </div>
 
       {/* Sticky Navigation Bar */}
-      {/* UPDATE: Higher z-index and solid bg-black when scrolled to block overlapping elements */}
       <nav className={`fixed top-0 left-0 w-full z-[100] transition-all duration-300 px-6 md:px-12 lg:px-20 ${
         scrolled ? 'bg-black border-b border-white/10 py-3' : 'bg-transparent py-6'
       }`}>
@@ -92,7 +89,6 @@ export default function Hero() {
         </div>
 
         {/* Mobile Menu Overlay */}
-        {/* UPDATE: Set z-index to 90 and bg-black (Solid) to hide background services text on scroll */}
         <div className={`fixed inset-0 z-[90] flex flex-col items-center justify-center bg-black transition-all duration-500 lg:hidden ${
           isOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-full pointer-events-none'
         }`}>
